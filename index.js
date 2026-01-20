@@ -12,6 +12,8 @@ server.use(bodyParser.urlencoded({ extended: false }));
 server.use(
   cors({
     origin: [
+      "https://sangeetdiagnostics.com",
+      "https://www.sangeetdiagnostics.com"
       "http://localhost:3000"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
