@@ -21,8 +21,6 @@ server.use(
   })
 );
 
-// IMPORTANT: handle preflight
-server.options("*", cors());
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
