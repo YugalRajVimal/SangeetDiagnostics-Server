@@ -8,27 +8,38 @@ const server = express();
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: false }));
 
+// Proper CORS configuration
+const allowedOrigins = [
+  "https://sangeetdiagnostics.com",
+  "https://www.sangeetdiagnostics.com",
+  "http://localhost:3000"
+];
 
+// Use dynamic function for origin for more robust handling
 server.use(
   cors({
-    origin: [
-      "https://sangeetdiagnostics.com",
-      "https://www.sangeetdiagnostics.com"
-      "http://localhost:3000"
-    ],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, etc.)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(
+          new Error("Not allowed by CORS: " + origin),
+          false
+        );
+      }
+    },
+    credentials: true, // Support cookies/auth if needed
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 200 // Some legacy browsers choke on 204
   })
 );
 
+// Optionally, handle preflight requests explicitly 
+server.options("*", cors());
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.Mailer_User,
-    pass: process.env.Mailer_Pass,
-  },
-});
 
 server.post("/send-mail", (req, res) => {
   // Collect form data
