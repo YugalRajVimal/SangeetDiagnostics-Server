@@ -40,6 +40,13 @@ server.use(
 // Optionally, handle preflight requests explicitly 
 server.options("*", cors());
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.Mailer_User,
+    pass: process.env.Mailer_Pass,
+  },
+});
 
 server.post("/send-mail", (req, res) => {
   // Collect form data
